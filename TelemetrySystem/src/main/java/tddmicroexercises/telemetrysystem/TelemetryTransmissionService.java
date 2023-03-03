@@ -1,6 +1,6 @@
 package tddmicroexercises.telemetrysystem;
 
-public interface TelemetryTransmissionInterface {
+public interface TelemetryTransmissionService {
     void send(String message);
 
     String receive();

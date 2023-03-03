@@ -2,17 +2,20 @@ package tddmicroexercises.telemetrysystem;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 public class TelemetryDiagnosticControlsTest {
-    @Mock
+    //    @Mock
     private TelemetryClient telemetryClient;
-    private TelemetryDiagnosticControls controls;
+    private TelemetryConnectionService connectionService;
+    private TelemetryTransmissionService transmissionService;
+    private TelemetryDiagnosticControlService controls;
 
     @BeforeEach
     public void setUp() {
         telemetryClient = new TelemetryClient();
-        controls = new TelemetryDiagnosticControls(telemetryClient);
+        connectionService = new Connection(telemetryClient);
+        transmissionService = new Transmission(telemetryClient);
+        controls = new TelemetryDiagnosticControls(connectionService, transmissionService);
     }
 
     @Test

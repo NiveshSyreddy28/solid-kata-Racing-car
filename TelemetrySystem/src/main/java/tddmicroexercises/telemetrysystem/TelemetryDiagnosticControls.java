@@ -1,13 +1,15 @@
 package tddmicroexercises.telemetrysystem;
 
-public class TelemetryDiagnosticControls {
+public class TelemetryDiagnosticControls implements TelemetryDiagnosticControlService {
     private final String DiagnosticChannelConnectionString = "*111#";
 
-    private final TelemetryClientInterface telemetryClient;
+    private final TelemetryConnectionService connection;
+    private final TelemetryTransmissionService transmission;
     private String diagnosticInfo = "";
 
-    public TelemetryDiagnosticControls(TelemetryClientInterface telemetryClientService) {
-        telemetryClient = telemetryClientService;
+    public TelemetryDiagnosticControls(TelemetryConnectionService connection, TelemetryTransmissionService transmission) {
+        this.connection = connection;
+        this.transmission = transmission;
     }
 
     public String getDiagnosticInfo() {
@@ -22,9 +24,9 @@ public class TelemetryDiagnosticControls {
         diagnosticInfo = "";
 
 
-        if (establishConnection(telemetryClient)) {
-            telemetryClient.send(TelemetryClient.DIAGNOSTIC_MESSAGE);
-            diagnosticInfo = telemetryClient.receive();
+        if (establishConnection(connection)) {
+            transmission.send(TelemetryClient.DIAGNOSTIC_MESSAGE);
+            diagnosticInfo = transmission.receive();
         } else {
             throw new Exception("Unable to connect.");
         }
@@ -32,18 +34,15 @@ public class TelemetryDiagnosticControls {
 
     }
 
-    public boolean establishConnection(TelemetryConnectionInterface telemetryClient) {
-        telemetryClient.disconnect();
+    public boolean establishConnection(TelemetryConnectionService connection) {
+        connection.disconnect();
 
         int retryLeft = 3;
-        while (telemetryClient.getOnlineStatus() == false && retryLeft > 0) {
-            telemetryClient.connect(DiagnosticChannelConnectionString);
+        while (connection.getOnlineStatus() == false && retryLeft > 0) {
+            connection.connect(DiagnosticChannelConnectionString);
             retryLeft -= 1;
         }
-//
-//        if (telemetryClient.getOnlineStatus() == false) {
-//            throw new Exception("Unable to connect.");
-//        }
-        return telemetryClient.getOnlineStatus();
+
+        return connection.getOnlineStatus();
     }
 }

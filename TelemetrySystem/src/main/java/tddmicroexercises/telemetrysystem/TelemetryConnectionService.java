@@ -1,6 +1,6 @@
 package tddmicroexercises.telemetrysystem;
 
-public interface TelemetryConnectionInterface {
+public interface TelemetryConnectionService {
     boolean getOnlineStatus();
 
     void connect(String telemetryServerConnectionString);
