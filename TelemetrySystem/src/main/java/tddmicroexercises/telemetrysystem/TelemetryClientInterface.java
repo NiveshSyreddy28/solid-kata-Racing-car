@@ -1,0 +1,4 @@
+package tddmicroexercises.telemetrysystem;
+
+public interface TelemetryClientInterface extends TelemetryConnectionInterface, TelemetryTransmissionInterface {
+}
