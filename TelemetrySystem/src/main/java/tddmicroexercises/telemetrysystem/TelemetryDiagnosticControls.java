@@ -21,6 +21,18 @@ public class TelemetryDiagnosticControls {
     public void checkTransmission() throws Exception {
         diagnosticInfo = "";
 
+
+        if (establishConnection(telemetryClient)) {
+            telemetryClient.send(TelemetryClient.DIAGNOSTIC_MESSAGE);
+            diagnosticInfo = telemetryClient.receive();
+        } else {
+            throw new Exception("Unable to connect.");
+        }
+
+
+    }
+
+    public boolean establishConnection(TelemetryConnectionInterface telemetryClient) {
         telemetryClient.disconnect();
 
         int retryLeft = 3;
@@ -28,27 +40,10 @@ public class TelemetryDiagnosticControls {
             telemetryClient.connect(DiagnosticChannelConnectionString);
             retryLeft -= 1;
         }
-
-        if (telemetryClient.getOnlineStatus() == false) {
-            throw new Exception("Unable to connect.");
-        }
-
-        telemetryClient.send(TelemetryClient.DIAGNOSTIC_MESSAGE);
-        diagnosticInfo = telemetryClient.receive();
-    }
-
-//    public boolean establishConnection(TelemetryConnectionInterface telemetryClient) {
-//        telemetryClient.disconnect();
 //
-//        int retryLeft = 3;
-//        while (telemetryClient.getOnlineStatus() == false && retryLeft > 0) {
-//            telemetryClient.connect(DiagnosticChannelConnectionString);
-//            retryLeft -= 1;
+//        if (telemetryClient.getOnlineStatus() == false) {
+//            throw new Exception("Unable to connect.");
 //        }
-////
-////        if (telemetryClient.getOnlineStatus() == false) {
-////            throw new Exception("Unable to connect.");
-////        }
-//        return telemetryClient.getOnlineStatus();
-//    }
+        return telemetryClient.getOnlineStatus();
+    }
 }
